@@ -47,10 +47,15 @@ public class WrongAssignmentOperatorCheck extends IssuableSubscriptionVisitor {
     SyntaxToken expressionFirstToken = aeTree.expression().firstToken();
     SyntaxToken variableLastToken = aeTree.variable().lastToken();
     if (isSuspiciousToken(expressionFirstToken)
+      && !isSingleNegationAssignment(expressionFirstToken, aeTree)
       && noSpacingBetween(operatorToken, expressionFirstToken)
       && !noSpacingBetween(variableLastToken, operatorToken)) {
       reportIssue(operatorToken, expressionFirstToken, "Was \"" + expressionFirstToken.text() + "=\" meant instead?");
     }
+  }
+
+  private static boolean isSingleNegationAssignment(SyntaxToken firstToken, AssignmentExpressionTree aeTree) {
+    return "!".equals(firstToken.text()) && (aeTree.parent() == null || !aeTree.parent().is(Tree.Kind.ASSIGNMENT));
   }
 
   private static boolean noSpacingBetween(SyntaxToken firstToken, SyntaxToken secondToken) {

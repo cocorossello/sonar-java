@@ -18,5 +18,6 @@ class A {
     a = b =! c; // Noncompliant {{Was "!=" meant instead?}} [[sc=11;ec=13]]
     a = b =!! c; // Noncompliant
     a = b = !c;
+    a =! c; // Compliant - since there is no '!=' assignment operator
   }
 }
